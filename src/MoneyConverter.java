@@ -6,14 +6,15 @@
 
 /* Часть 4. Добавить метод, отображающий инструкции, и метод, конвертирующий сумму денег.  */
 
+/* Часть 5. Добавить одномерные массивы сумм денег для многократных конвертаций. */
+
 import java.util.Scanner;
 
 public class MoneyConverter {
-    static double rouble; // сумма денег в российских рублях
     static final double ROUBLES_PER_YUAN = 10.19; // курс покупки юаня за 1 шт.
 
     /*
-    * метод отображающий инструкции
+     * метод отображающий инструкции
      */
     public static void instruction() {
         System.out.println("Аннотация:");
@@ -22,55 +23,53 @@ public class MoneyConverter {
     }
 
     /*
-    * метод конвертирующий сумму денег
+     * метод конвертирующий сумму денег
      */
-    public static double converter(int yuan) {
+    public static double[] converter(int[] yuanArray, int n) {
+        double[] roublesArray = new double[n];
+
         // Расчёт по формуле
-        rouble = ROUBLES_PER_YUAN * yuan;
-
-        // Выводим данные если значение положительное
-        if (yuan > 0) {
-            System.out.print(yuan);
-
-            // Определение правильного окончания валюты
-            if (yuan == 1)
-                System.out.print(" китайский юань равен ");
-            else if (yuan <= 4)
-                System.out.print(" китайских юаня равны ");
-            else
-                System.out.print(" китайских юаней равны ");
+        for (int i = 0; i < n; i++) {
+            roublesArray[i] = ROUBLES_PER_YUAN * yuanArray[i];
         }
-        return rouble;
+
+        return roublesArray;
     }
 
     /*
-    * метод main
+     * метод main
      */
     public static void main(String[] args) {
-        int yuan; // сумма денег в китайских юаней
+        int[] yuanArray;    // массив сумм денег в юанях
+        double[] roublesArray;   // массив сумм денег в рублях
+        int n;              // количество конвертаций
 
         Scanner input = new Scanner(System.in);
 
         // вызываем метод отображающий инструкции
         instruction();
 
-        yuan = 1; // инициализируем значение для начала цикла
-        while (yuan != 0) { // счётный цикл для многократных конвертаций
+        System.out.print("Введите корректное количество конвертаций (0 для выхода): ");
+        n = input.nextInt();
 
-            // проверка правильности ввода
-            do {
-                // Вводные данные
-                // Сумма в юанях для конвертации
-                System.out.print("Введите количество юаней для конвертации в рубли (0 для выхода): ");
-                yuan = input.nextInt();
-            } while (yuan < 0);
+        if (n != 0) {
+            // Вводные данные
+            // Сумма в юанях для конвертации
+            System.out.print("Введите " + n + " сумм денег в юанях для конвертации в рубли: ");
+            yuanArray = new int[n];
+            for (int i = 0; i < n; i++) {
+                yuanArray[i] = input.nextInt();
+            }
 
             // вызов метода конвертации
-            rouble = converter(yuan);
+            roublesArray = converter(yuanArray, n);
 
-            // Вывод результата конвертации в рублях
-            if (rouble != 0) //
-                System.out.println((int) (rouble * 100) / 100.0 + " российских рублей.\n");
+            // Вывод результата конвертации в рублях в формате таблицы
+
+            System.out.println("\n\tСумма, ¥\tСумма, ₽");
+            for (int i = 0; i < n; i++) {
+                System.out.println("\t\t" + yuanArray[i] + "\t\t\t" + (int) (roublesArray[i] * 100) / 100.0);
+            }
         }
     }
 }
